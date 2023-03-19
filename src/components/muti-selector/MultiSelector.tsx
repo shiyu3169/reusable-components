@@ -27,14 +27,34 @@ export default function MultiSelector({
   const [optionsShowing, setOptionsShowing] = useState(false)
   const refClickOutside = useClickOutside(() => setOptionsShowing(false))
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([])
+
+  const handleSelect = (option: Option) => {
+    if (maxSelectNumber && selectedOptions.length >= maxSelectNumber) return
+    setSelectedOptions((options) => [...options, option])
+    // Allow custom onSelect callback
+    if (onSelect) {
+      onSelect(option)
+    }
+  }
+
+  const handleRemove = (option: Option) => {
+    setSelectedOptions((options) =>
+      options.filter((optionInArr) => optionInArr.label !== option.label),
+    )
+    // Allow custom onRemove callback
+    if (onRemove) {
+      onRemove(option)
+    }
+  }
+
+  const contextValue = {
+    selectedOptions,
+    handleSelect,
+    handleRemove,
+  }
+
   return (
-    <MultiSelectorProvider
-      onRemove={onRemove}
-      onSelect={onSelect}
-      maxSelectNumber={maxSelectNumber}
-      selectedOptions={selectedOptions}
-      setSelectedOptions={setSelectedOptions}
-    >
+    <MultiSelectorProvider contextValue={contextValue}>
       {/* TODO: fix this type */}
       {/* @ts-ignore */}
       <div ref={refClickOutside} style={style}>
