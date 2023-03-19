@@ -5,7 +5,7 @@ import MultiSelectorProvider, {
 } from './providers/MultiSelectorProvider'
 import SelectedOption from './SelectedOption'
 import { useClickOutside } from '../../hooks'
-import AvailableOption from './Option'
+import AvailableOption from './AvailableOption'
 
 type MultiSelectorProps = {
   title: string
