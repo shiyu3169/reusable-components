@@ -1,4 +1,4 @@
-.display-area {
+.displayArea {
   min-height: 2rem;
   border: 1px solid #bebdbd;
   resize: none;
@@ -20,7 +20,8 @@
 .options .option input {
   margin-right: 0.5rem;;
 }
-.display-area .selected-option {
+
+.displayArea .selectedOption {
   margin: 0.2rem;
   padding: 0.2rem 0.4rem;
   display: inline-block;
@@ -28,7 +29,7 @@
   border-radius: 10px;
 }
 
-.display-area .selected-option button {
+.displayArea .selectedOption button {
   border: none;
   background-color: transparent;
 }

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import './Multiselector.css'
+import { useState } from 'react'
+import classes from './MultiSelector.module.css'
 import MultiSelectorProvider, {
   Option,
 } from './providers/MultiSelectorProvider'
@@ -61,7 +61,7 @@ export default function MultiSelector({
         <h2>{title}</h2>
         {/* display area */}
         <div
-          className='display-area'
+          className={classes.displayArea}
           onClick={(e) => {
             e.stopPropagation() // prevent it triggers useClickOutside, since the element is removed from dom upon click
             setOptionsShowing(true)
@@ -77,7 +77,7 @@ export default function MultiSelector({
         {/* options */}
         {optionsShowing && (
           <ul
-            className={`options ${
+            className={`${classes.options} ${
               maxSelectNumber && maxSelectNumber <= selectedOptions.length
                 ? 'disable'
                 : null

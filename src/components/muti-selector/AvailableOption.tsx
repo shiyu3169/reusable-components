@@ -3,6 +3,7 @@ import {
   Option,
   useMultiSelectorContext,
 } from './providers/MultiSelectorProvider'
+import classes from './MultiSelector.module.css'
 
 type OptionProps = {
   option: Option
@@ -29,7 +30,7 @@ export default function AvailableOption({ option }: OptionProps) {
   }
 
   return (
-    <li className='option'>
+    <li className={classes.option}>
       <input
         className='checkbox'
         type='checkbox'
