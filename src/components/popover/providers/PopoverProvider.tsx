@@ -26,14 +26,12 @@ const PopoverContext = createContext<{
 }>({
   isShow: false,
   setIsShow: () => {
-    throw new Error('PopoverCOntext setIsShow should be used under provider')
+    throw new Error('setIsShow should be used under provider')
   },
   preferredPosition: 'bottom-center',
   triggerRect: defaultRect,
   setTriggerRect: () => {
-    throw new Error(
-      'PopoverContext setTriggerRect should be used under provider',
-    )
+    throw new Error('setTriggerRect should be used under provider')
   },
 })
 
