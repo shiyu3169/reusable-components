@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useClickOutside, useFocusTrapping } from './hooks'
+import { useClickOutside, useFocusTrapping } from '../../hooks'
 import PopoverProvider, {
   Position,
   usePopoverContext,

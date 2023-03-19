@@ -3,6 +3,9 @@ import './Multiselector.css'
 import MultiSelectorProvider, {
   Option,
 } from './providers/MultiSelectorProvider'
+import SelectedOption from './SelectedOption'
+import { useClickOutside } from '../../hooks'
+import AvailableOption from './Option'
 
 type MultiSelectorProps = {
   title: string
@@ -22,7 +25,7 @@ export default function MultiSelector({
   maxSelectNumber,
 }: MultiSelectorProps) {
   const [optionsShowing, setOptionsShowing] = useState(false)
-  const refClickOutside = uesClickOutside(() => setOptionsShowing(false))
+  const refClickOutside = useClickOutside(() => setOptionsShowing(false))
   const [selectedOptions, setSelectedOptions] = useState<Option[]>([])
   return (
     <MultiSelectorProvider
@@ -32,6 +35,8 @@ export default function MultiSelector({
       selectedOptions={selectedOptions}
       setSelectedOptions={setSelectedOptions}
     >
+      {/* TODO: fix this type */}
+      {/* @ts-ignore */}
       <div ref={refClickOutside} style={style}>
         <h2>{title}</h2>
         {/* display area */}
@@ -45,7 +50,7 @@ export default function MultiSelector({
           {selectedOptions.map((selectedOption) => (
             <SelectedOption
               key={selectedOption.label}
-              selectedOption={selectedOption}
+              option={selectedOption}
             />
           ))}
         </div>
@@ -59,90 +64,11 @@ export default function MultiSelector({
             }`}
           >
             {options.map((option) => (
-              <Option
-                key={option.label}
-                option={option}
-                selectedOptions={selectedOptions}
-              />
+              <AvailableOption key={option.label} option={option} />
             ))}
           </ul>
         )}
       </div>
     </MultiSelectorProvider>
   )
-}
-/* -------------------------------------------------------------------------- */
-/*                               SelectedOption                               */
-/* -------------------------------------------------------------------------- */
-function SelectedOption({ selectedOption }) {
-  const { handleRemove } = useMultiSelectorContext()
-  return (
-    <div className='selected-option'>
-      <span>{selectedOption.label}</span>
-      <button
-        onClick={() => {
-          handleRemove(selectedOption)
-        }}
-      >
-        X
-      </button>
-    </div>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
-/*                                   Option                                   */
-/* -------------------------------------------------------------------------- */
-function Option({ option }) {
-  const { selectedOptions, handleRemove, handleSelect } =
-    useMultiSelectorContext()
-  const [checked, setChecked] = useState(0)
-  useEffect(() => {
-    const found = selectedOptions.find(
-      (selectedOption) => selectedOption.label === option.label,
-    )
-    setChecked(found ? 1 : 0)
-  }, [selectedOptions])
-
-  const onChange = (e) => {
-    const { checked } = e.target
-    if (checked) {
-      handleSelect(option)
-    } else {
-      handleRemove(option)
-    }
-  }
-
-  return (
-    <li className='option'>
-      <input
-        className='checkbox'
-        type='checkbox'
-        onChange={onChange}
-        checked={checked}
-      />
-      <span>{option.label}</span>
-    </li>
-  )
-}
-
-function uesClickOutside(callback) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const element = ref.current
-
-    if (element == null) {
-      return
-    }
-    const onClick = (e) => {
-      if (!element.contains(e.target)) {
-        callback()
-      }
-    }
-    document.addEventListener('click', onClick)
-    return () => {
-      document.removeEventListener('click', onClick)
-    }
-  }, [])
-  return ref
 }
