@@ -1,9 +1,18 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Multiselector.css'
+import MultiSelectorProvider, {
+  Option,
+} from './providers/MultiSelectorProvider'
 
-/* -------------------------------------------------------------------------- */
-/*                                MultiSelector                               */
-/* -------------------------------------------------------------------------- */
+type MultiSelectorProps = {
+  title: string
+  options: Option[]
+  onSelect?: (option: Option) => void
+  onRemove?: (option: Option) => void
+  style?: { [x: string]: string }
+  maxSelectNumber?: number
+}
+
 export default function MultiSelector({
   title,
   options,
@@ -11,37 +20,18 @@ export default function MultiSelector({
   onSelect,
   onRemove,
   maxSelectNumber,
-}) {
-  const [selectedOptions, setSelectedOptions] = useState([])
+}: MultiSelectorProps) {
   const [optionsShowing, setOptionsShowing] = useState(false)
   const refClickOutside = uesClickOutside(() => setOptionsShowing(false))
-
-  const handleSelect = (option) => {
-    if (maxSelectNumber && selectedOptions.length >= maxSelectNumber) return
-    setSelectedOptions((options) => [...options, option])
-    // Allow customer onSelect callback
-    if (onSelect) {
-      onSelect(option)
-    }
-  }
-
-  const handleRemove = (removedOption) => {
-    setSelectedOptions((options) =>
-      options.filter((option) => option.label !== removedOption.label),
-    )
-    // Allow customer onRemove callback
-    if (onRemove) {
-      onRemove(removedOption)
-    }
-  }
-  const contextValue = {
-    selectedOptions,
-    handleSelect,
-    handleRemove,
-  }
-
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>([])
   return (
-    <MultiSelectorContext.Provider value={contextValue}>
+    <MultiSelectorProvider
+      onRemove={onRemove}
+      onSelect={onSelect}
+      maxSelectNumber={maxSelectNumber}
+      selectedOptions={selectedOptions}
+      setSelectedOptions={setSelectedOptions}
+    >
       <div ref={refClickOutside} style={style}>
         <h2>{title}</h2>
         {/* display area */}
@@ -63,7 +53,9 @@ export default function MultiSelector({
         {optionsShowing && (
           <ul
             className={`options ${
-              maxSelectNumber <= selectedOptions.length ? 'disable' : null
+              maxSelectNumber && maxSelectNumber <= selectedOptions.length
+                ? 'disable'
+                : null
             }`}
           >
             {options.map((option) => (
@@ -76,7 +68,7 @@ export default function MultiSelector({
           </ul>
         )}
       </div>
-    </MultiSelectorContext.Provider>
+    </MultiSelectorProvider>
   )
 }
 /* -------------------------------------------------------------------------- */
